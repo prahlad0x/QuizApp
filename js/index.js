@@ -1,6 +1,6 @@
 sessionStorage.clear();
 
-let isregister = true;
+let isregister = false;
 let form = document.querySelector("form");
 let rb = document.getElementById("rb");
 let lb = document.getElementById("lb");
