@@ -80,13 +80,14 @@ nav  > div > button:hover {
     padding: 20px;
     margin-top: 10px;
     display: grid;
-    grid-template-columns: repeat(4,1fr);
+    grid-template-columns: repeat(4,435px);
     gap: 40px;
+    /* grid-template-rows: 370px; */
 }
 
 .qcard{
     box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-    padding:40px 25px;
+    padding:40px 25px 30px 25px;
     text-align: center;
 }
 .nbold{
@@ -107,7 +108,7 @@ nav  > div > button:hover {
 }
 
 .qcard > div > button{
-    margin-top: 29px;
+    margin-top: 50px;
     background-color: rgb(44, 112, 221);
     color: white;
     border: none;

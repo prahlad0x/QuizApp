@@ -82,6 +82,7 @@ editSaveBtn.addEventListener("click", (e) => {
         } else {
           console.log(data);
           alert(data.msg);
+          return
         }
       })
       .catch((err) => {
@@ -132,7 +133,10 @@ CreateQuizBtn.addEventListener("click", () => {
 
     let titlE = QuestionTitle.value;
     let optionss = [opt1.value, opt2.value, opt3.value, opt4.value];
-
+    if(count >=10){
+      alert('You can add only 10 question in a quiz!')
+      return
+    }
     if (titlE == "" || !titlE) {
       flag = false;
       alert("Please fill in the Question Title!");
@@ -317,12 +321,12 @@ function getQCard(quiz) {
                     }</p>
                     <p class = "bold">Questions : ${quiz.questions.length}</p>
                     <div class="bothbtns">
-                        <button class ='btns' data-id ="${quiz._id}" style='${x? "margin-top : 50px"  : ""} ;${
+                        <button class ='btns' data-id ="${quiz._id}" style='${x? "margin-top : 52px"  : "margin-top : 30px"} ;${
     user.email != quiz.creator ? "" : "background-color:#9a7b0b;"
   }'> ${user.email != quiz.creator ? "Take Quiz" : "EDIT"}</button>
                         <button class ='btns' data-id ="${quiz._id}"  style='${
     user.email != quiz.creator ? "" : "background-color:red;"
-  }${x? "margin-top : 50px"  : ""};'>${user.email != quiz.creator ? "Leaderboard" : "DELETE"}</button>
+  }${x? "margin-top : 52px"  : "margin-top : 30px"};'>${user.email != quiz.creator ? "Leaderboard" : "DELETE"}</button>
                     </div>
                 </div>
         `;

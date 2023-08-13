@@ -64,7 +64,7 @@ h1{
   background-color: white;
 }
 
-#btns>button:first-child{
+#btns>button:nth-child(2){
   color: white;
   background-color: blue;
 }
