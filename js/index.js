@@ -13,7 +13,7 @@ let email = document.querySelector("#email")
 form.addEventListener("submit", (e) => {
   e.preventDefault();
   if (isregister) {
-    fetch("https://quiz-server-27y4.onrender.com/user/register", {
+    fetch("https://quiz-server-27y4.onrender.com/Quiz/user/register", {
       method: "POST",
       body: JSON.stringify({ email : email.value, password : password.value}),
       headers: {
@@ -36,7 +36,7 @@ form.addEventListener("submit", (e) => {
       });
   }
   else {
-    fetch("https://quiz-server-27y4.onrender.com/user/login", {
+    fetch("https://quiz-server-27y4.onrender.com/Quiz/user/login", {
       method: "POST",
       body: JSON.stringify({email : email.value, password : password.value}),
       headers: {
