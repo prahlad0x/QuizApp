@@ -1,6 +1,17 @@
 let title = document.getElementById('title')
-const user = JSON.parse(sessionStorage.getItem("user"));
+
+const toast = document.getElementById("snackbar")
+
+const user = JSON.parse(localStorage.getItem("user"));
 if (!user) location.replace("./index.html");
+else if(user.expiresAt < Date.now()){
+  showToast("#4f772d", "Session Expired !")
+  setTimeout(() => {
+    location.replace("./index.html");
+  }, 600);
+
+}
+
 
 let params = new URLSearchParams(window.location.search);
 let quizID = params.get("quiz");
@@ -13,14 +24,14 @@ function getdata() {
         title.innerText = data.title
         settable(data.leaderboard);
       } else {
-        alert("something went wrong");
+        showToast("red","something went wrong");
         location.replace("./dashboard.html");
         return;
       }
     })
     .catch((err) => {
       console.log(err);
-      alert("something went wrong");
+      showToast("red","something went wrong");
       location.replace("./dashboard.html");
     });
 }
@@ -47,7 +58,7 @@ function getcard(el, i) {
 }
 
 if (!quizID) {
-  alert("something went wrong, please retry");
+  showToast("orange","something went wrong, please retry");
   location.replace("./dashboard.html");
 } else {
   getdata();
@@ -56,3 +67,12 @@ if (!quizID) {
 document.getElementById('logo').addEventListener('click', ()=>{
     location.href = "./dashboard.html"
 })
+
+function showToast(color, text) {
+  toast.className = "show";
+  toast.style.background = color;
+  toast.innerText = text
+  setTimeout(function () {
+    toast.className = toast.className.replace("show", "");
+  }, 1500);
+}

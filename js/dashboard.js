@@ -1,7 +1,14 @@
 const url = "https://quiz-server-27y4.onrender.com/Quiz";
+const toast = document.getElementById("snackbar")
 
-const user = JSON.parse(sessionStorage.getItem("user"));
+const user = JSON.parse(localStorage.getItem("user"));
 if (!user) location.replace("./index.html");
+else if(user.expiresAt < Date.now()){
+  showToast("#4f772d", "Session Expired !")
+  setTimeout(() => {
+    location.replace("./index.html");
+  }, 1000);
+}
 else getQuiz();
 document.getElementById("username").innerText = user.email.split(".")[0];
 
@@ -62,7 +69,7 @@ editSaveBtn.addEventListener("click", (e) => {
   e.preventDefault();
   let flag = true
   if(editQuiztitle.value == "" || !editQuiztitle.value || editQuizDesc.value == "" || !editQuizDesc.value){
-    alert("Quiz Title and Description both  are reqiured !")
+    showToast("orange","Quiz Title and Description both  are reqiured !")
     flag = false;
     return
   }
@@ -77,17 +84,17 @@ editSaveBtn.addEventListener("click", (e) => {
       .then((res) => res.json())
       .then((data) => {
         if (data.isOk || data.isOK) {
-          alert(data.msg);
+          showToast("#386641",data.msg);
           hideEdit();
         } else {
           console.log(data);
-          alert(data.msg);
+          showToast("#386641",data.msg);
           return
         }
       })
       .catch((err) => {
         console.log(err);
-        alert("Something went wrong!");
+        showToast("#386641","Something went wrong!");
       });
   }
 });
@@ -134,20 +141,20 @@ CreateQuizBtn.addEventListener("click", () => {
     let titlE = QuestionTitle.value;
     let optionss = [opt1.value, opt2.value, opt3.value, opt4.value];
     if(count >=10){
-      alert('You can add only 10 question in a quiz!')
+      showToast("#386641",'You can add only 10 question in a quiz!')
       return
     }
     if (titlE == "" || !titlE) {
       flag = false;
-      alert("Please fill in the Question Title!");
+      showToast("#386641","Please fill in the Question Title!");
       return;
     } else if (optionss.includes("") || optionss.includes(undefined || null)) {
       flag = false;
-      alert("Please fill in all the options!");
+      showToast("#386641","Please fill in all the options!");
       return;
     } else if (correctOptions.length < 1) {
       flag = false;
-      alert("Please select atleast one correct option!");
+      showToast("#386641","Please select atleast one correct option!");
       return;
     }
 
@@ -182,10 +189,10 @@ CreateQuizBtn.addEventListener("click", () => {
 
     if (quizTitle.value == "") {
       flag = false;
-      alert("please fill in the Quiz Title!");
+      showToast("#386641","please fill in the Quiz Title!");
     } else if (quizDescription.value == "") {
       flag = false;
-      alert("please fill in the Quiz Description!");
+      showToast("#386641","please fill in the Quiz Description!");
     }
 
     if (flag) {
@@ -224,17 +231,17 @@ function addQuiz(quiz) {
     .then((res) => res.json())
     .then((data) => {
       if (data.isOk || isOK) {
-        alert("Quiz Created Successfully");
+        showToast("#386641","Quiz Created Successfully");
         setTimeout(() => {
           getQuiz();
-        }, 1000);
+        }, 600);
       } else {
-        alert(data.msg);
+        showToast("#red",data.msg);
       }
     })
     .catch((err) => {
       console.log(err);
-      alert("Something went wrong!");
+      showToast("#red","Something went wrong!");
     });
 }
 
@@ -253,14 +260,14 @@ function getQuiz() {
           mainCont.innerHTML = html;
           setEvent();
         } else {
-          alert(data.msg);
+          showToast("#ef233c",data.msg);
           mainCont.innerHTML = "";
           heading.innerHTML =
             "<h1 style='text-align:center; margin-top:60px'>There is no quiz availble.....<br> Refresh the page once.</h1>";
           }
         })
         .catch((err) => {
-          alert("Unable to fetch Quizzes");
+          showToast("red","Unable to fetch Quizzes");
           mainCont.innerHTML = "";
           heading.innerHTML =
             "<h1 style='text-align:center; margin-top:60px'>There is no quiz availble.....<br> Refresh the page once.</h1>";
@@ -297,15 +304,15 @@ function del(id) {
     .then((data) => {
       console.log(data);
       if (data.isOK || data.isOk) {
-        alert(data.msg);
+      showToast("#386641", "Quiz Deleted ...");
         getQuiz();
       } else {
-        alert("something went wrong");
+        showToast("#ef233c","something went wrong");
       }
     })
     .catch((err) => {
       console.log(err);
-      alert("something went wrong");
+      showToast("#386641","something went wrong");
     });
 }
 
@@ -333,7 +340,7 @@ function getQCard(quiz) {
 }
 
 function logout() {
-  sessionStorage.clear();
+  localStorage.clear();
   location.replace("./index.html");
 }
 
@@ -345,12 +352,12 @@ function editquiz(id) {
         currentEditQuiz = data.quiz;
         setEditValue(0);
       } else {
-        alert(data.msg);
+        showToast("#ef233c",data.msg);
       }
     })
     .catch((err) => {
       console.log(err);
-      alert("Something went wrong!..");
+      showToast("#ef233c","Something went wrong!..");
     });
 }
 
@@ -416,15 +423,15 @@ function changeData() {
 
   if (titlE == "" || !titlE) {
     flag = false;
-    alert("Please fill in the Question Title!");
+    showToast("#ef233c","Please fill in the Question Title!");
     return false;
   } else if (optionss.includes("") || optionss.includes(undefined || null)) {
     flag = false;
-    alert("Please fill in all the options!");
+    showToast("#ef233c","Please fill in all the options!");
     return false;
   } else if (editCorrectOptions.length < 1) {
     flag = false;
-    alert("Please select atleast one correct option!");
+    showToast("#ef233c","Please select atleast one correct option!");
     return false;
   }
   if (flag) {
@@ -482,4 +489,14 @@ function hideEdit() {
   editPopup.style.display = "none";
   currentQuestion = 0
   getQuiz();
+}
+
+
+function showToast(color, text) {
+  toast.className = "show";
+  toast.style.background = color;
+  toast.innerText = text
+  setTimeout(function () {
+    toast.className = toast.className.replace("show", "");
+  }, 1500);
 }

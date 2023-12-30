@@ -1,5 +1,15 @@
-const user = JSON.parse(sessionStorage.getItem("user"));
+const user = JSON.parse(localStorage.getItem("user"));
+const toast = document.getElementById("snackbar")
+
+
 if (!user) location.replace("./index.html");
+else if(user.expiresAt < Date.now()){
+  showToast("#4f772d", "Session Expired !")
+  setTimeout(() => {
+    location.replace("./index.html");
+  }, 600);
+}
+
 
 const url = `https://quiz-server-27y4.onrender.com/Quiz`;
 
@@ -29,7 +39,7 @@ function getQuiz() {
         Quiz = data.quiz;
         setData();
       } else {
-        alert(data.msg);
+        showToast("#386641",data.msg);
         setTimeout(() => {
           location.replace("./dashboard.html");
         }, 1000);
@@ -37,10 +47,10 @@ function getQuiz() {
     })
     .catch((err) => {
       console.log(err);
-      alert("something went wrong, please retry");
+      showToast("#386641","something went wrong, please retry");
       setTimeout(() => {
         location.replace("./dashboard.html");
-      }, 1000);
+      }, 700);
     });
 }
 
@@ -110,7 +120,7 @@ function setEvent() {
   }
   nextBtn.addEventListener("click", () => {
     if (flag && multiFlag) {
-      alert("Please Select Atleast 1 option");
+      showToast("#2a4230","Please Select Atleast 1 option");
       return;
     }
     if (increamentSocre) {
@@ -146,30 +156,30 @@ function setEvent() {
           .then((res) => res.json())
           .then((data) => {
             if (data.isOK || data.isOk) {
-              alert("Quiz ended !");
+              showToast("green","Quiz ended !");
               setTimeout(() => {
                 location.replace("./dashboard.html");
-              }, 1000);
+              }, 700);
             } else {
-              alert("Something went wrong, Try again to submit!");
+              showToast("#386641","Something went wrong, Try again to submit!");
             }
           })
           .catch((err) => {
             console.log(err);
-            alert("Something went wrong, Try again to submit!");
+            showToast("#386641","Something went wrong, Try again to submit!");
           });
       } else {
-        alert("Quiz ended !");
+        showToast("green","Quiz ended !");
         setTimeout(() => {
           location.replace("./dashboard.html");
-        }, 1000);
+        }, 700);
       }
     }
   });
 }
 
 if (!quizID) {
-  alert("something went wrong, please retry");
+  showToast("#2a4230","something went wrong, please retry");
   location.replace("./dashboard.html");
 } else {
   getQuiz();
@@ -192,12 +202,12 @@ function setScore(){
       if (data.isOK || data.isOk) {
         setData();
       } else {
-        alert("Something went wrong, try again!");
+        showToast("red","Something went wrong, try again!");
       }
     })
     .catch((err) => {
       console.log(err);
-      alert("Something went wrong, Try again!");
+      showToast("#2a4230","Something went wrong, Try again!");
     });
   }
   else{
@@ -206,3 +216,11 @@ function setScore(){
 }
 
 
+function showToast(color, text) {
+  toast.className = "show";
+  toast.style.background = color;
+  toast.innerText = text;
+  setTimeout(function () {
+    toast.className = toast.className.replace("show", "");
+  }, 1500);
+}

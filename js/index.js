@@ -1,4 +1,4 @@
-sessionStorage.clear();
+localStorage.clear();
 
 let isregister = false;
 let form = document.querySelector("form");
@@ -9,6 +9,7 @@ let submitbtn = document.querySelector('input[type="submit"]');
 let showpass = document.getElementById("hh");
 let password = document.querySelector("#pass")
 let email = document.querySelector("#email")
+const toast = document.querySelector("#snackbar")
 
 form.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -23,16 +24,19 @@ form.addEventListener("submit", (e) => {
       .then((res) => res.json())
       .then((data) => {
         if (data.isOk) {
-          sessionStorage.setItem("user", JSON.stringify(data.user));
-          alert(data.msg);
-          location.href = "./dashboard.html";
+          data.user.expiresAt = Date.now() + 1000*60*60*24*3
+          localStorage.setItem("user", JSON.stringify(data.user));
+          showToast("#386641",data.msg);
+          setTimeout(()=> {
+            location.href = "./dashboard.html";
+          }, 600)
         } else {
-          alert(data.msg);
+          showToast("#fb8b24",data.msg);
         }
       })
       .catch((err) => {
         console.log(err);
-        alert("something went wrong!");
+        showToast("#fb8b24","something went wrong!");
       });
   }
   else {
@@ -46,16 +50,19 @@ form.addEventListener("submit", (e) => {
       .then((res) => res.json())
       .then((data) => {
         if (data.isOk) {
-          sessionStorage.setItem("user", JSON.stringify(data.user));
-          alert(data.msg);
-          location.href = "./dashboard.html";
+          data.user.expiresAt = Date.now() + 1000*60*60*24*3
+          localStorage.setItem("user", JSON.stringify(data.user));
+          showToast("#386641", data.msg);
+          setTimeout(()=> {
+            location.href = "./dashboard.html";
+          }, 600)
         } else {
-          alert(data.msg);
+          showToast("#fb8b24", data.msg)
         }
       })
       .catch((err) => {
         console.log(err);
-        alert("something went wrong!");
+        showToast("#fb8b24","something went wrong!");
       });
   }
 });
@@ -87,3 +94,12 @@ showpass.addEventListener('click',(e)=>{
   else password.setAttribute("type", "password")
 })
 
+
+function showToast(color, text) {
+  toast.className = "show";
+  toast.style.background = color;
+  toast.innerText = text.toUpperCase();
+  setTimeout(function () {
+    toast.className = toast.className.replace("show", "");
+  }, 1500);
+}
